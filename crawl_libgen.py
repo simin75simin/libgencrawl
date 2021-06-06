@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import pickle
 from icecream import ic
@@ -6,8 +7,15 @@ from tqdm import tqdm
 from lxml.html import fromstring
 from urllib.request import urlretrieve
 
+def timestr():
+    now=datetime.now()
+    date_time = now.strftime("%m-%d-%Y_%H:%M:%S")
+    return date_time
+
 def crawl(url,page=1):
-    os.chdir('results')
+    dirname='results_'+timestr()
+    os.mkdir(dirname)
+    os.chdir(dirname)
     resp=requests.get(url).content
     tree=fromstring(resp)
     bookpath=f'/html/body/table[3]//td[10]/a'
