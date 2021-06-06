@@ -12,7 +12,7 @@ def timestr():
     date_time = now.strftime("%m-%d-%Y_%H:%M:%S")
     return date_time
 
-def crawl(url,page=1):
+def crawl(url,page=1,num=10):
     dirname='results_'+timestr()
     os.mkdir(dirname)
     os.chdir(dirname)
@@ -21,6 +21,8 @@ def crawl(url,page=1):
     bookpath=f'/html/body/table[3]//td[10]/a'
     booklinks=tree.xpath(bookpath)
     for booklink in tqdm(booklinks,desc=f'page {page}'):
+        if num<=1:
+            return
         downloadurl=booklink.values()[0]
         bookresp=requests.get(downloadurl).content
         tree=fromstring(bookresp)
@@ -32,15 +34,18 @@ def crawl(url,page=1):
         filename=f'{title}.{ext}'
         #ic(title,filename,dllink)
         urlretrieve(dllink,os.path.join('.',filename))
+        num-=1
     nextpagepath='/html/body/table[2]/tr/td[2]/font/a'
     #ic(tree.xpath(nextpagepath)[0].values()[0])
     try:
         nextpagelink=tree.xpath(nextpagepath)[0].values()[0]
-        crawl(nextpagelink,page+1)
+        crawl(nextpagelink,page+1,num)
     except:
         pass
 
 
 if __name__=='__main__':
     url=input('please input url after search and press enter: ')
-    crawl(url)
+    num=input('please input the number of books you wanna crawl and press enter: ')
+    num=int(num)
+    crawl(url,num)
