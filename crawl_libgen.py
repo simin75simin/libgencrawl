@@ -12,7 +12,7 @@ def timestr():
     date_time = now.strftime("%m-%d-%Y_%H:%M:%S")
     return date_time
 
-def crawl(url,page=1,num=10):
+def crawl(url,num=10,page=1):
     dirname='results_'+timestr()
     os.mkdir(dirname)
     os.chdir(dirname)
@@ -38,6 +38,7 @@ def crawl(url,page=1,num=10):
     nextpagepath='/html/body/table[2]/tr/td[2]/font/a'
     #ic(tree.xpath(nextpagepath)[0].values()[0])
     try:
+        ic('nxt')
         nextpagelink=tree.xpath(nextpagepath)[0].values()[0]
         crawl(nextpagelink,page+1,num)
     except:
