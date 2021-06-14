@@ -32,13 +32,10 @@ def crawl(url,num=10,page=1):
         dllink=tree.xpath(dlpath)[0].values()[0]
         ext=dllink[dllink.rindex('.')+1:]
         filename=f'{title}.{ext}'
-        #ic(title,filename,dllink)
         urlretrieve(dllink,os.path.join('.',filename))
         num-=1
     nextpagepath='/html/body/table[2]/tr/td[2]/font/a'
-    #ic(tree.xpath(nextpagepath)[0].values()[0])
     try:
-        ic('nxt')
         nextpagelink=tree.xpath(nextpagepath)[0].values()[0]
         crawl(nextpagelink,page+1,num)
     except:
